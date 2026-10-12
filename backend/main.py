@@ -30,6 +30,13 @@ def examine(payload: ExamineRequest):
         )
         result = json.loads(response.choices[0].message.content)
         return {'analysis':result,'disclaimer':'Synthetic training use only. AI output is not verified legal or administrative advice.'}
-    except Exception as exc:
-        raise HTTPException(502, 'Model examination failed. Check server logs and configuration.') from exc
+       except Exception as exc:
+        import logging
+        logging.getLogger("uvicorn.error").exception(
+            "AI examination failed"
+        )
+        raise HTTPException(
+            status_code=502,
+            detail="Model examination failed. Check server logs."
+        ) from exc
 
